@@ -31,14 +31,15 @@ But after `n_games > 80` average score is converging to some number. Because i c
 
 ## Changing reward policy and epsilon
 
-+ Current reward system
++ Reward system
 
-    The current reward system is when snake eat food then reward 10 is given and when game is over or time is exceeded then reward is -10. Check code below.
+    The current reward system activate like when snake eat food then reward 10 is given and when game is over or time is exceeded then reward is -10. Check code below.
+    
     ```python
     if self.is_collision() or self.frame_iteration > 100*len(self.snake):
-    game_over = True
-    reward = -10
-    return reward, game_over, self.scor
+          game_over = True
+          reward = -10
+          return reward, game_over, self.scor
     
     if self.head == self.food:
         self.score += 1
