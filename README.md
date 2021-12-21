@@ -7,9 +7,8 @@ _captured in game_
 # Study
 
 ![700 game](https://user-images.githubusercontent.com/87563747/146956643-dd3497a5-3c14-4636-bcb6-320eb3eb89ab.png)
-<img src="https://user-images.githubusercontent.com/87563747/146956643-dd3497a5-3c14-4636-bcb6-320eb3eb89ab.png" width="500" height="300"/>
           
-Up figure is original code result. As i can see agent struggle under 80 number of games then it explod. Because if `n_games` is under 80, then `self.epsilon` is positive so the random method will not work instead learning algorithm will work.
+Up figure is original code result which is the overall learning curve. As you can see agent struggle under 80 number of games then after that it explode. Because agent need data to learn, so I set epsilon that give enough chance to agent to collect data. 
 
 ```python
 def get_action(self, state):
@@ -26,10 +25,11 @@ def get_action(self, state):
         
     return final_move
 ```
+if `n_games` is under 80, then `self.epsilon` is positive so the random method will not work instead learning algorithm will work.
 
 But after `n_games > 80` average score is converging to some number. Because i could observe snake being trapped on their own without continuing to eat. To overcome this problem i should try a few things.
 
-## Changing reward policy
+## Changing reward policy and epsilon
 
 + Current reward system
 
