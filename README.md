@@ -25,9 +25,9 @@ def get_action(self, state):
         
     return final_move
 ```
-if `n_games` is under 80, then `self.epsilon` is positive so the random method will not work instead learning algorithm will work.
+if `n_games` is under 80, then `self.epsilon` is positive so lower `n_games` have bigger probability that random decision method will work instead of reinforcement learning algorithm. In the other way if `n_games` is upper 80, then `self.epsilon`is negative which mean that algorithm always decide the agent movements.
 
-But after `n_games > 80` average score is converging to some number. Because i could observe snake being trapped on their own without continuing to eat. To overcome this problem i should try a few things.
+But after `n_games > 80` average score (orange line) is converging to some number. Because i could observe snake being trapped on their own without continuing to eat. To overcome this problem i should try a few things.
 
 ## Changing reward policy and epsilon
 
