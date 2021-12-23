@@ -29,9 +29,9 @@ if `n_games` is under 80, then `self.epsilon` is positive so lower `n_games` hav
 
 But after `n_games > 80` average score (orange line) is converging to some number. Because i could observe snake being trapped on their own without continuing to eat. To overcome this problem i should try a few things.
 
-## Changing reward policy and epsilon
+## Problem Solving
 
-+ Reward system
++ Changing reward system
 
     The current reward system activate like when snake eat food then reward 10 is given and when game is over or time is exceeded then reward is -10. Check code below.
     
@@ -48,7 +48,7 @@ But after `n_games > 80` average score (orange line) is converging to some numbe
     else:
         self.snake.pop()
     ```
-    So I wonder if the results will change if the amount of reward changes. I design ```for loop``` to check every ```mean_score``` in range ```10<=plus_reward<=20```, ```-20<=minus_reward<=-10``` about 300 games.
+    So I wonder if the results will change if the amount of reward changes. I design `for loop` to check every `mean_score` in range `10<=plus_reward<=20`, `-20<=minus_reward<=-10` about 300 games iteration.
     ```python
     if __name__ == '__main__':
           plus_list = [i+10 for i in range(11)]
@@ -81,11 +81,14 @@ But after `n_games > 80` average score (orange line) is converging to some numbe
     | **20** | 22.15 | 21.55 | 22.25 | 22.53 | 19.75 | 22.63 | 18.88 | 22.55 | 22.29 | 19.84 | 23.05 |
     
     
-    I change the value of reward ,but it didn't change anything.
+    I change the value of reward ,but it didn't make meanignful difference.
     
 
++ Adding more data of condition to Snake
 
-    
+  The main problem of snake is that it keeps locking itself. To alert this danger to snake additional imformation must be needed.
+
+  + Location of last tail
 
 # Reference
 I watch the YouTube Video "https://youtube.com/playlist?list=PLqnslRFeH2UrDh7vUmJ60YrmWd64mTTKV" and his Github code "https://github.com/python-engineer/snake-ai-pytorch"
