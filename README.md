@@ -81,7 +81,7 @@ But after `n_games > 80` average score (orange line) is converging to some numbe
     | **20** | 22.15 | 21.55 | 22.25 | 22.53 | 19.75 | 22.63 | 18.88 | 22.55 | 22.29 | 19.84 | 23.05 |
     
     
-    I change the value of reward ,but it didn't make meanignful difference.
+    Changing Value doesn't make meanignful difference.
     
 
 + Adding more data of condition to Snake
