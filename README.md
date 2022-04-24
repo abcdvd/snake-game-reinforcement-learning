@@ -8,7 +8,7 @@ _captured in game_
 
 ![700 game](https://user-images.githubusercontent.com/87563747/146956643-dd3497a5-3c14-4636-bcb6-320eb3eb89ab.png)
           
-Up figure is original code result which is the overall learning curve. As you can see agent struggle under 80 number of games then after that it explode. Because agent need data to learn, so I set epsilon that give enough chance to agent to collect data. 
+Up figure is original code result which is the overall learning curve. As you can see agent struggle under 80 number of games then after that it exploded. Because agent needed data to learn, so I set epsilon that give enough chance to agent to collect data. 
 
 ```python
 def get_action(self, state):
