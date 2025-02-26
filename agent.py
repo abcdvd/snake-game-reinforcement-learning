@@ -87,7 +87,7 @@ class Agent:
 
     def get_action(self, state):
         # random moves: tradeoff exploration / exploitation
-        self.epsilon = 80 - self.n_games
+        self.epsilon = max(0.01, 80 - self.n_games)
         final_move = [0,0,0]
         if random.randint(0, 200) < self.epsilon:
             move = random.randint(0, 2)
@@ -103,7 +103,6 @@ class Agent:
 def train():
     plot_scores = []
     plot_mean_scores = []
-    total_score = 0
     record = 0
     agent = Agent()
     game = SnakeGameAI()
@@ -136,9 +135,8 @@ def train():
             print("Game", agent.n_games, "Score", score, "Record", record)
 
             plot_scores.append(score)
-            total_score += score
-            mean_score = total_score/agent.n_games
-            plot_mean_scores.append(mean_score)
+            recent_mean_score = sum(plot_scores[-10:])/min(10, agent.n_games)
+            plot_mean_scores.append(recent_mean_score)
             plot(plot_scores, plot_mean_scores)
 
 
