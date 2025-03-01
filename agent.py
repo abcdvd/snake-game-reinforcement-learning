@@ -17,11 +17,25 @@ class Agent:
         self.epsilon = 0 #randomness
         self.gamma = 0.9 # discount rate
         self.memory = deque(maxlen=MAX_MEMORY) # popleft()
-        self.model = Linear_QNet(11, 256, 3)
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.model = Linear_QNet(779, 1024, 3).to(self.device)  
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
 
 
     def get_state(self, game):
+        # 각 칸에 snake 몸통 존재 여부를 나타내는 grid 상태 (1: 있음, 0: 없음)
+        grid_state = []
+        # 만약 BLOCK_SIZE가 game.py에 정의되어 있다면 import 하거나 아래와 같이 직접 20을 사용합니다.
+        block_size = 20  # 또는 BLOCK_SIZE
+
+        # 게임 보드 전체를 순회 (row-major order)
+        for y in range(0, game.h, block_size):
+            for x in range(0, game.w, block_size):
+                point = Point(x, y)
+                # snake에 해당 point가 있으면 1, 아니면 0
+                grid_state.append(1 if point in game.snake else 0)
+
+
         head = game.snake[0]
         point_l = Point(head.x-20, head.y)
         point_r = Point(head.x+20, head.y)
@@ -64,7 +78,12 @@ class Agent:
             game.food.y < game.head.y, # food up
             game.food.y > game.head.y # food down
         ]
-        return np.array(state, dtype=int)
+
+
+
+        grid_state.extend(state)
+        return np.array(grid_state, dtype=int)
+
 
 
     def remember(self, state, action, reward, next_state, done):
@@ -93,7 +112,7 @@ class Agent:
             move = random.randint(0, 2)
             final_move[move] = 1
         else:
-            state0 = torch.tensor(state, dtype=torch.float)
+            state0 = torch.tensor(state, dtype=torch.float).to(self.device)
             prediction = self.model(state0)
             move = torch.argmax(prediction).item()
             final_move[move] = 1
