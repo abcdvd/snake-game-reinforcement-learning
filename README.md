@@ -84,11 +84,8 @@ But after `n_games > 80` average score (orange line) is converging to some numbe
     Changing Value doesn't make meanignful difference.
     
 
-+ Adding more data of condition to Snake
-
-  The main problem of snake is that it keeps locking itself. To alert this danger to snake additional imformation must be needed.
-
-  + Location of last tail
++ Adding more input data
+  I think the main problem why it can't develop better strategies is the lack of input informations. So i make model can get inputs of the every blocks of the game board if it is empty or not. but result is even worse. Learning is so slow even it looks like there is no improvement. I think too much information is bad.
 
 # Reference
 I watch the YouTube Video "https://youtube.com/playlist?list=PLqnslRFeH2UrDh7vUmJ60YrmWd64mTTKV" and his Github code "https://github.com/python-engineer/snake-ai-pytorch"
