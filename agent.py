@@ -29,7 +29,9 @@ class Agent:
         for y in range(0, game.h, block_size):
             for x in range(0, game.w, block_size):
                 point = Point(x, y)
-                if point in game.snake:
+                if point == game.snake[0]:
+                    grid_state.append(5)
+                elif point in game.snake:
                     grid_state.append(1)
                 elif game.food == point:
                     grid_state.append(10)   # a different marker for food
@@ -100,7 +102,7 @@ class Agent:
         return loss
 
     def get_action(self, state):
-        self.epsilon = max(3, 80 - self.n_games)
+        self.epsilon = max(10, 150 - self.n_games)
         final_move = [0, 0, 0]
         if random.randint(0, 200) < self.epsilon:
             move = random.randint(0, 2)

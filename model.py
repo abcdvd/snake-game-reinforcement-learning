@@ -17,17 +17,21 @@ class CNN_QNet(nn.Module):
         self.device = device if device is not None else torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
         # CNN layers for the grid input (1 channel, 24x32)
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=16, kernel_size=7, stride=1, padding=3)
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=16, kernel_size=3, stride=1, padding=1)
         self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2)  # output: (16, 12, 16)
-        self.conv2 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=7, stride=1, padding=3)
+        self.conv2 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3, stride=1, padding=1)
         self.pool2 = nn.MaxPool2d(kernel_size=2, stride=2)  # output: (32, 6, 8)
         
         # Flatten size = 32 * (rows/4) * (cols/4)
         self.flattened_size = 32 * (self.grid_shape[0] // 4) * (self.grid_shape[1] // 4)
         
-        # After CNN, concatenate with the additional features
-        self.fc1 = nn.Linear(self.flattened_size + additional_features, 512)
-        self.fc2 = nn.Linear(512, output_size)
+        # After CNN run Linear for CNN only
+        self.CNNfc1 = nn.Linear(self.flattened_size, 512)
+        self.CNNfc2 = nn.Linear(512, 64)
+
+        # Merge CNN and additional_features
+        self.ffc1 = nn.Linear(64 + self.additional_features, 256)
+        self.ffc2 = nn.Linear(256, output_size)
         
         self.to(self.device)  # move entire model to device
 
@@ -54,10 +58,14 @@ class CNN_QNet(nn.Module):
         grid = grid.view(batch_size, -1)  # flatten
         
         # concat CNN output + extra features
-        x = torch.cat((grid, extra), dim=1)
-        x = F.relu(self.fc1(x))
-        x = self.fc2(x)
-        return x
+        # x = torch.cat((grid, extra), dim=1)
+        x = F.relu(self.CNNfc1(grid))
+        x = F.relu(self.CNNfc2(x))
+        
+        y = torch.cat((x, extra), dim=1)
+        y = F.relu(self.ffc1(y))
+        y = self.ffc2(y)
+        return y
 
     def save(self, file_name='model.pth'):
         model_folder_path = "./model"
