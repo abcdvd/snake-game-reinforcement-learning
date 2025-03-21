@@ -17,28 +17,26 @@ class Agent:
         self.gamma = 0.9  # discount rate
         self.memory = deque(maxlen=MAX_MEMORY)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.detection_length = 33  # odd number
         # grid: 24x32 (640/20 x 480/20), plus 11 features, 3 actions
-        self.model = CNN_QNet((24, 32), 11, 3).to(self.device)
+        self.model = CNN_QNet((self.detection_length, self.detection_length), 11, 3).to(self.device)
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
 
     def get_state(self, game):
-        grid_state = []
         block_size = 20  # or from game.py
-
-        # fill the grid info
-        for y in range(0, game.h, block_size):
-            for x in range(0, game.w, block_size):
-                point = Point(x, y)
-                if point == game.snake[0]:
-                    grid_state.append(5)
-                elif point in game.snake:
-                    grid_state.append(1)
-                elif game.food == point:
-                    grid_state.append(10)   # a different marker for food
-                else:
-                    grid_state.append(0)
-
         head = game.snake[0]
+
+        grid_state = np.zeros((self.detection_length, self.detection_length))
+        for i in range(-self.detection_length//2, self.detection_length//2):
+            for j in range(-self.detection_length//2, self.detection_length//2):
+                point = Point(head.x+i*block_size, head.y+j*block_size)
+                if point == game.snake[0]:
+                    grid_state[i, j] = 5
+                elif point in game.snake:
+                    grid_state[i, j] = 1
+                elif game.food == point:
+                    grid_state[i, j] = 10
+
         point_l = Point(head.x - 20, head.y)
         point_r = Point(head.x + 20, head.y)
         point_u = Point(head.x, head.y - 20)
@@ -49,6 +47,15 @@ class Agent:
         dir_u = game.direction == Direction.UP
         dir_d = game.direction == Direction.DOWN
 
+        if dir_u:
+            pass
+        if dir_d:
+            grid_state = np.rot90(grid_state, 2)
+        if dir_l:
+            grid_state = np.rot90(grid_state, 1)
+        if dir_r:
+            grid_state = np.rot90(grid_state, 3)
+        
         state = [
             # Danger straight
             (dir_r and game.is_collision(point_r)) or
@@ -80,9 +87,8 @@ class Agent:
             game.food.y < game.head.y,  # food up
             game.food.y > game.head.y   # food down
         ]
-
-        grid_state.extend(state)
-        return np.array(grid_state, dtype=int)
+        grid_state = grid_state.flatten()
+        return np.concatenate((grid_state, state)).astype(int)
 
     def remember(self, state, action, reward, next_state, done):
         self.memory.append((state, action, reward, next_state, done))
