@@ -87,5 +87,30 @@ But after `n_games > 80` average score (orange line) is converging to some numbe
 + Adding more input data
   I think the main problem why it can't develop better strategies is the lack of input informations. So i make model can get inputs of the every blocks of the game board if it is empty or not. but result is even worse. Learning is so slow even it looks like there is no improvement. I think too much information is bad.
 
++ Changed Model to CNN-Based DQN with Agent-Centric View
+To enable learning of long-term strategies, the model was redesigned to incorporate spatial information using a CNN.  
+Instead of feeding the entire board, the input is now a **33×33 detection box** centered on the snake’s head.  
+This detection window is **rotated to align with the agent’s current direction**, providing a consistent forward-facing view.
+
+  However, a CNN alone wasn’t sufficient for capturing strategic patterns, so I appended **11 additional features**:
+
+  **Danger indicators (3)**:  
+  - Danger straight  
+  - Danger left  
+  - Danger right  
+  **Current movement direction (4)**: one-hot encoded  
+  **Relative food location (4)**:  
+  - Food ahead  
+  - Food behind  
+  - Food left  
+  - Food right
+
+  Despite this structural improvement, the agent still frequently gets stuck and fails to consistently improve performance —  
+suggesting that further refinements (e.g., temporal context, reward shaping, or experience prioritization) may be necessary.
+  
+![CNN 1600 games fail](https://github.com/user-attachments/assets/24bc11a2-3f0f-4288-9ad0-d4b96699794b)
+
+  
+
 # Reference
-I watch the YouTube Video "https://youtube.com/playlist?list=PLqnslRFeH2UrDh7vUmJ60YrmWd64mTTKV" and his Github code "https://github.com/python-engineer/snake-ai-pytorch"
+I watch his Github code "https://github.com/python-engineer/snake-ai-pytorch"
