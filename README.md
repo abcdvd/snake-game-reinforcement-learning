@@ -105,8 +105,7 @@ This detection window is **rotated to align with the agent’s current direction
   - Food left  
   - Food right
 
-  Despite this structural improvement, the agent still frequently gets stuck and fails to consistently improve performance —  
-suggesting that further refinements (e.g., temporal context, reward shaping, or experience prioritization) may be necessary.
+  Despite this structural improvement, the agent still frequently gets stuck and fails to consistently improve performance — suggesting that further refinements (e.g., temporal context, reward shaping, or experience prioritization) may be necessary.
   
 ![CNN 1600 games fail](https://github.com/user-attachments/assets/24bc11a2-3f0f-4288-9ad0-d4b96699794b)
 
